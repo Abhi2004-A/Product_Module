@@ -25,7 +25,7 @@ public class CloudinaryServiceImp implements CloudinaryService{
 		CloudinaryResponse response=null;
 		try {
 		if(image!=null && !image.isEmpty()) {
-				Map<?, ?> cloudresult=cloud.uploader().upload(image, ObjectUtils.emptyMap());
+				Map<?, ?> cloudresult=cloud.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
 				String publicId=cloudresult.get("public_id").toString();
 				String imageUrl=cloudresult.get("secure_url").toString();
 				response=new CloudinaryResponse(imageUrl, publicId);

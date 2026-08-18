@@ -82,7 +82,15 @@ public class ProductServiceImp implements ProductService{
 				pirepo.save(pi);
 			}
 		}
-		return mapper.map(p, ProductDto.class);
+		ProductDto dto=new ProductDto();
+		dto.setProductId(p.getProductId());
+	    dto.setProductName(p.getProductName());
+	    dto.setDescription(p.getDescription());
+	    dto.setPrice(p.getPrice());
+	    dto.setAddedAt(p.getAddedAt());
+		dto.setBrandId(p.getBrand().getBrandId());
+		dto.setCategoryId(p.getCategory().getCategoryId());
+		return dto;
 	}
 
 	@Override

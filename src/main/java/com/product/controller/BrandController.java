@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,10 +30,12 @@ public class BrandController {
 	
 	@Autowired
 	private BrandService bservice;
-	
-	@PostMapping("/addbrand")
-	public ResponseEntity<?> addingbrand(@RequestPart AddBrandRequest request,@RequestPart MultipartFile image){
-		BrandDto brand=bservice.addBrand(request,image);
+	@PostMapping(path = "/addbrand", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> addingbrand(@RequestParam String brandName,@RequestPart("image") MultipartFile image){
+		AddBrandRequest request=new AddBrandRequest();
+		request.setBrandName(brandName);
+		BrandDto brand=bservice.addBrand(request, image);
+		
 		return ResponseEntity.ok(new ApiResponse<>("Brand Added Successfully!",brand,HttpStatus.OK));
 	}
 	

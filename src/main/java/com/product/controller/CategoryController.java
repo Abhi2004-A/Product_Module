@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +31,11 @@ public class CategoryController {
 	@Autowired
 	private CategoryService cservice;
 	
-	@PostMapping("/addcate")
-	public ResponseEntity<?> addCate(@RequestPart AddCategoryRequest request, @RequestPart MultipartFile image){
+	@PostMapping(path = "/addcate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> addCate(@RequestParam String categoryName, @RequestParam String cateDescription, @RequestPart MultipartFile image){
+		AddCategoryRequest request=new AddCategoryRequest();
+		request.setCategoryName(categoryName);
+		request.setCateDescription(cateDescription);
 		CategoryDto cdto=cservice.addCategory(request,image);
 		return ResponseEntity.ok(new ApiResponse<>("Category Added Successfully!",cdto,HttpStatus.OK));
 	}
