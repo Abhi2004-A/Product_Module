@@ -3,6 +3,8 @@ package com.product.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.product.entity.ProductImage;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,11 +24,11 @@ public class ProductDto {
 	
 	private LocalDateTime addedAt;
 	
-	private Integer brandId;
+	private BrandDto brand;
 	
-	private Integer categoryId;
+	private CategoryDto category;
 	
-	private List<ProductImageDto> productimages;
+	private List<ProductImage> productimages;
 	
 
 }

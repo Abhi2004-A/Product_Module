@@ -1,10 +1,5 @@
 package com.product.request;
 
-import com.product.entity.Brand;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data

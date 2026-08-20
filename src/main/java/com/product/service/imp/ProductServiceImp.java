@@ -1,6 +1,7 @@
 package com.product.service.imp;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -82,15 +83,7 @@ public class ProductServiceImp implements ProductService{
 				pirepo.save(pi);
 			}
 		}
-		ProductDto dto=new ProductDto();
-		dto.setProductId(p.getProductId());
-	    dto.setProductName(p.getProductName());
-	    dto.setDescription(p.getDescription());
-	    dto.setPrice(p.getPrice());
-	    dto.setAddedAt(p.getAddedAt());
-		dto.setBrandId(p.getBrand().getBrandId());
-		dto.setCategoryId(p.getCategory().getCategoryId());
-		return dto;
+		return mapper.map(p, ProductDto.class);
 	}
 
 	@Override
@@ -112,17 +105,36 @@ public class ProductServiceImp implements ProductService{
 		mapper.map(request, p);
 		p.setBrand(ifExistsbrand);
 		p.setCategory(ifExistscate);
+		
+		if(images!=null && !images.isEmpty()) {
+			List<ProductImage> productimage=pirepo.findByProducts(p);
+			for(ProductImage pi: productimage) {
+				cservice.deleteImage(pi.getProductPublicId());
+				pirepo.delete(pi);
+			}
+			for(MultipartFile image:images) {
+				if(image==null || image.isEmpty()) {
+					throw new ProductException("Image is Required!", HttpStatus.BAD_REQUEST);
+				}
+				CloudinaryResponse response=cservice.uploadImage(image);
+				ProductImage pimage=new ProductImage();
+				pimage.setProductPublicId(response.getPublicId());
+				pimage.setProductImagePath(response.getImageUrl());
+				pimage.setProducts(p);
+				pirepo.save(pimage);
+			}
+		}
+		
 		p=prepo.save(p);
 		return mapper.map(p, ProductDto.class);
 	}
-
+	
 	@Override
 	public void deleteProduct(Integer productId) {
 		Products p=prepo.findById(productId).orElseThrow(()->new ProductException("Product Not Found!", HttpStatus.NOT_FOUND));
 		
 		if(p.getProductimage()!=null) {
-			for
-			(ProductImage productimage:p.getProductimage()) {
+			for(ProductImage productimage:p.getProductimage()) {
 				if(productimage.getProductPublicId()!=null) {
 					cservice.deleteImage(productimage.getProductPublicId());
 				}

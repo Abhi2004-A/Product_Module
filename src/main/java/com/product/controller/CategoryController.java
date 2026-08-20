@@ -40,8 +40,11 @@ public class CategoryController {
 		return ResponseEntity.ok(new ApiResponse<>("Category Added Successfully!",cdto,HttpStatus.OK));
 	}
 	
-	@PutMapping("/updatecat/{categoryId}")
-	public ResponseEntity<?> updatecate(@PathVariable Integer categoryId, @RequestPart UpdateCategoryRequest request,@RequestPart MultipartFile image){
+	@PutMapping(path = "/updatecat/{categoryId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> updatecate(@PathVariable Integer categoryId, @RequestParam String categoryName, @RequestParam String cateDescription,@RequestPart MultipartFile image){
+		UpdateCategoryRequest request=new UpdateCategoryRequest();
+		request.setCategoryName(categoryName);
+		request.setCateDescription(cateDescription);
 		CategoryDto cdto=cservice.updateCategory(categoryId,request,image);
 		return ResponseEntity.ok(new ApiResponse<>("Category Updated Successfully!", cdto, HttpStatus.OK));
 	}

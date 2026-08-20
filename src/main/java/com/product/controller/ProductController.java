@@ -52,8 +52,15 @@ public class ProductController {
 		return ResponseEntity.ok(new ApiResponse<>("All Products!", ldto, HttpStatus.OK));
 	}
 	
-	@PutMapping("/update/{productId}")
-	public ResponseEntity<?> updateproducts(@PathVariable Integer productId,@RequestPart UpdateProductRequest request, @RequestPart List<MultipartFile> images){
+	@PutMapping(path = "/update/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> updateproducts(@PathVariable Integer productId,@RequestParam String productName,@RequestParam Double price,@RequestParam String description,@RequestParam String brandName,@RequestParam String categoryName, @RequestPart List<MultipartFile> images){
+		
+		UpdateProductRequest request=new UpdateProductRequest();
+		request.setProductName(productName);
+		request.setPrice(price);
+		request.setDescription(description);
+		request.setBrandName(brandName);
+		request.setCategoryName(categoryName);
 		ProductDto dto=pservice.updateProduct(productId,request,images);
 		return ResponseEntity.ok(new ApiResponse<>("Product Updated Successfully!", dto, HttpStatus.OK));
 	}

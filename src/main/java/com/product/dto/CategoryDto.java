@@ -15,6 +15,6 @@ public class CategoryDto {
 	
 	private String cateDescription;
 	
-	private String cateImageUrl;
+	private String catImageUrl;
 
 }
